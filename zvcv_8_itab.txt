@@ -1,0 +1,120 @@
+*&---------------------------------------------------------------------*
+*& Report YVCV_8_ITAB
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT YVCV_8_ITAB.
+
+
+******with header
+**TABLES zvcvemp.
+**
+**data: lt_tab type zvcvemp occurs 0 WITH HEADER LINE.
+**
+**PARAMETERS p_sal type yempsalary_cv.
+**select-OPTIONS sc_id for zvcvemp-empid.
+**
+**SELECT *
+**  into lt_tab
+**  from zvcvemp
+**  where empsalary eq p_sal and empid in sc_id.
+**
+**append lt_tab to lt_tab.
+**ENDSELECT.
+**loop at lt_tab INTO lt_tab.
+**
+**  write:/ lt_tab-empid,
+**          lt_tab-empname,
+**          lt_tab-empsalary,
+**          lt_tab-empaddress,
+**          lt_tab-empcity.
+**endloop.
+
+
+
+******without header
+**TABLES zvcvemp.
+**
+**data: lt_tab type zvcvemp occurs 0 WITH HEADER LINE.
+**
+**PARAMETERS p_sal type yempsalary_cv.
+**SELECT-OPTIONS sc_id for zvcvemp-empid.
+**
+**select *
+**  into table lt_tab
+**  from zvcvemp
+**  where empsalary eq p_sal and empid in sc_id.
+**
+**loop at lt_tab into lt_tab.
+**  write:/ lt_tab-empid,
+**          lt_tab-empname,
+**          lt_tab-empsalary,
+**          lt_tab-empaddress,
+**          lt_tab-empcity.
+** ENDLOOP.
+
+********with user defined work area
+**TABLES zvcvemp.
+**
+**types: BEGIN of ls_tab,
+**  empid type yempid_cv,
+**  empname type yempname_cv,
+**  empsalary type yempsalary_cv,
+**  empaddress type yempaddress_cv,
+**  empcity type yempcity_cv,
+**  end of ls_tab.
+**data: lt_tab type STANDARD TABLE OF ls_tab,
+**      wa_tab type ls_tab.
+**
+**PARAMETERS p_sal type yempsalary_cv.
+**SELECT-OPTIONS sc_id for zvcvemp-empid.
+**
+**SELECT empid empname empsalary empaddress empcity
+**  into wa_tab
+**  from zvcvemp
+**  where empsalary eq p_sal and empid in sc_id.
+**
+**APPEND wa_tab to lt_tab.
+**ENDSELECT.
+**
+**loop at lt_tab into wa_tab.
+**  write: /  wa_tab-empid,
+**            wa_tab-empname,
+**            wa_tab-empsalary,
+**            wa_tab-empaddress,
+**            wa_tab-empcity.
+**  ENDLOOP.
+
+
+*******final code*****
+
+TABLES zvcvemp.
+
+*types: BEGIN of ls_tab,
+*  empid type yempid_cv,
+*  empname type yempname_cv,
+*  empsalary type yempsalary_cv,
+*  empaddress type yempaddress_cv,
+*  empcity type yempcity_cv,
+*  end of ls_tab.
+data: lt_tab type TABLE OF zvcv_strt_cust,
+      wa_tab type zvcv_strt_cust.
+
+PARAMETERS p_sal type yempsalary_cv.
+SELECT-OPTIONS sc_id for zvcvemp-empid.
+
+SELECT empid empname empsalary empaddress empcity
+  into table lt_tab
+  from zvcvemp
+  where empsalary eq p_sal and empid in sc_id.
+
+**APPEND wa_tab to lt_tab.
+**ENDSELECT.
+
+loop at lt_tab into wa_tab.
+  write: /  wa_tab-empid,
+            wa_tab-empname,
+            wa_tab-empsalary,
+            wa_tab-empaddress,
+            wa_tab-empcity.
+  ENDLOOP.

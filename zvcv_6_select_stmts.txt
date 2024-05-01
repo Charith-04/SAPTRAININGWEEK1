@@ -1,0 +1,80 @@
+*&---------------------------------------------------------------------*
+*& Report YVCV_6_SELECT_STMT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT yvcv_6_select_stmt.
+*tables mara.
+*
+*data : lv_matnr type MATNR,
+*       lv_ersda type ERSDA,
+*       lv_ernam type ERNAM,
+*       lv_aenam type AENAM,
+*       lv_laeda type LAEDA.
+*
+*select MATNR ERSDA ERNAM AENAM LAEDA
+*  into ( lv_matnr, lv_ersda, lv_ernam, lv_aenam, lv_laeda )
+*  from mara
+*  where matnr = '000000000000000023'.
+*
+*write:/ lv_matnr, lv_ersda, lv_ernam, lv_aenam, lv_laeda.
+*endselect.
+
+*TABLES vbak.
+*data : lv_vbeln type vbak-vbeln,
+*       lv_erdat type vbak-erdat,
+*       lv_erzet type vbak-erzet,
+*       lv_audat type vbak-audat,
+*       lv_bnddt type vbak-bnddt.
+*SELECT-OPTIONS sc_vbeln for vbak-vbeln.
+*PARAMETERS p_audat type vbak-audat.
+*
+*select vbeln erdat erzet audat bnddt
+*  into ( lv_vbeln, lv_erdat, lv_erzet, lv_audat, lv_bnddt )
+*  from vbak
+*  where vbeln in sc_vbeln and
+*  audat eq p_audat.
+*
+* write: / lv_vbeln, lv_erdat, lv_erzet, lv_audat, lv_bnddt.
+*
+* ENDSELECT.
+
+**TABLES zvcvemp.
+**DATA: lv_empid      TYPE yempid_cv,
+**      lv_empname    TYPE yempname_cv,
+**      lv_empsalary  TYPE yempsalary_cv,
+**      lv_empaddress TYPE yempaddress_cv,
+**      lv_empcity    TYPE yempcity_cv.
+**PARAMETERS p_empsal TYPE zvcvemp-empsalary.
+**SELECT-OPTIONS sc_empid FOR zvcvemp-empid.
+**
+**SELECT empid empname empsalary empaddress empcity
+**  INTO ( lv_empid, lv_empname, lv_empsalary, lv_empaddress, lv_empcity )
+**  FROM zvcvemp
+**  WHERE empsalary EQ p_empsal AND
+**  empid IN sc_empid.
+**
+**  WRITE: / lv_empid, lv_empname, lv_empsalary, lv_empaddress, lv_empcity.
+**
+**ENDSELECT.
+
+
+TABLES zvcvemp.
+data: lv_id type yempid_cv,
+      lv_name type yempname_cv,
+      lv_salary type yempsalary_cv,
+      lv_address type yempaddress_cv,
+      lv_city type yempcity_cv.
+SELECT-OPTIONS sc_sal for zvcvemp-empsalary.
+SELECT-OPTIONS sc_id for zvcvemp-empid.
+PARAMETERS : p_city type yempcity_cv,
+             p_name type yempname_cv.
+
+SELECT empid empname empsalary empaddress empcity
+  into ( lv_id, lv_name, lv_salary, lv_address, lv_city )
+  from zvcvemp
+  where empid in sc_id and empsalary in sc_sal and empcity eq p_city and empname eq p_name.
+
+  write: / lv_id, lv_name, lv_salary, lv_address, lv_city.
+
+ENDSELECT.

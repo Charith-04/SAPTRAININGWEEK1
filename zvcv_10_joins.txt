@@ -1,0 +1,133 @@
+*&-- -------------------------------------------------------------------*
+*& Report YVCV_10_JOIN
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT yvcv_10_join.
+**types: BEGIN OF ls_tab,
+**    MATNR TYPE MATNR,  "mara
+**    ERNAM TYPE ERNAM,
+**    LAEDA	TYPE LAEDA,
+**    AENAM	TYPE AENAM,
+**    VPSTA	TYPE VPSTA,
+**
+**    PSTAT TYPE PSTAT_D,  "marc
+**    LVORM	TYPE LVOWK,
+**    BWTTY	TYPE BWTTY_D,
+**    XCHAR	TYPE XCHAR,
+**  END OF LS_TAB.
+**
+**  data: lt_tab type STANDARD TABLE OF ls_tab,
+**        wa_tab type ls_tab,
+**        lv_mat type matnr.
+**
+**  select-OPTIONS sc_mat for lv_mat.
+**
+**  START-OF-SELECTION.
+**
+**  select
+**    mara~matnr
+**    mara~ernam
+**    mara~laeda
+**    mara~aenam
+**    mara~vpsta
+**    marc~pstat
+**    marc~lvorm
+**    marc~bwtty
+**    marc~xchar
+** into TABLE lt_tab
+**    from mara
+**    left outer join marc
+**    on mara~matnr = marc~matnr
+**
+**    where mara~matnr in sc_mat.
+**IF sy-subrc eq 0.
+**  write: 'Records found and count is:', sy-dbcnt.
+**  else.
+**    write: 'Records not found count is:', sy-dbcnt.
+**    ENDIF.
+**
+**end-of-SELECTION.
+**
+**loop at lt_tab into wa_tab.
+**  write:/
+**    wa_tab-matnr,
+**    wa_tab-ernam,
+**    wa_tab-laeda,
+**    wa_tab-aenam,
+**    wa_tab-vpsta,
+**    wa_tab-pstat,
+**    wa_tab-lvorm,
+**    wa_tab-bwtty,
+**    wa_tab-xchar.
+**  ENDLOOP.
+
+TYPES: BEGIN OF ls_tab,
+         matnr TYPE matnr,  "mara
+         ernam TYPE ernam,
+         laeda  TYPE laeda,
+         aenam  TYPE aenam,
+         vpsta  TYPE vpsta,
+
+         pstat TYPE pstat_d,  "marc
+         lvorm  TYPE lvowk,
+         bwtty  TYPE bwtty_d,
+         xchar  TYPE xchar,
+
+         spras TYPE spras,  "makt
+         maktx  TYPE maktx,
+         maktg  TYPE maktg,
+       END OF ls_tab.
+
+DATA: lt_tab TYPE STANDARD TABLE OF ls_tab,
+      wa_tab TYPE ls_tab,
+      lv_mat TYPE matnr.
+
+SELECT-OPTIONS sc_mat FOR lv_mat.
+
+START-OF-SELECTION.
+
+  SELECT
+    mara~matnr
+    mara~ernam
+    mara~laeda
+    mara~aenam
+    mara~vpsta
+    marc~pstat
+    marc~lvorm
+    marc~bwtty
+    marc~xchar
+    makt~spras
+    makt~maktx
+    makt~maktg
+ INTO TABLE lt_tab
+    FROM mara
+    INNER JOIN marc
+    ON mara~matnr = marc~matnr
+    INNER JOIN makt
+    ON mara~matnr = makt~matnr
+
+    WHERE mara~matnr IN sc_mat.
+
+END-OF-SELECTION.
+
+IF sy-subrc eq 0.
+  write: 'Records found and count is:', sy-dbcnt.
+  else.
+    write: 'Records not found count is:', sy-dbcnt.
+    ENDIF.
+  LOOP AT lt_tab INTO wa_tab.
+    WRITE:/
+      wa_tab-matnr color 4,
+      10 wa_tab-ernam COLOR 1,
+      20 wa_tab-laeda COLOR 2,
+      35 wa_tab-aenam COLOR 3,
+      45 wa_tab-vpsta COLOR 4,
+      55 wa_tab-pstat COLOR 5,
+      65 wa_tab-lvorm COLOR 6,
+      75 wa_tab-bwtty COLOR 7,
+      85 wa_tab-xchar COLOR 1,
+      100 wa_tab-spras COLOR 2,
+      140 wa_tab-maktx COLOR 3,
+      160 wa_tab-maktg COLOR 4.
+  ENDLOOP.

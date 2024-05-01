@@ -1,0 +1,64 @@
+*&---------------------------------------------------------------------*
+*& Report ZVCV9
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZVCV9.
+
+******uppercase
+***PARAMETERS p_a(20).
+***TRANSLATE p_a TO UPPER CASE.
+***WRITE p_a.
+
+****lowercase
+**PARAMETERS p_a(10).
+**translate p_a to LOWER CASE.
+**write p_a.
+
+****concatenate
+**PARAMETERS: p_a(10) LOWER CASE,
+**            p_b(10) LOWER CASE.
+**data lv_destnt(20).
+**CONCATENATE p_a p_b into lv_destnt SEPARATED BY space.
+**write lv_destnt.
+
+****split
+**PARAMETERS: p_a(20).
+**data: lv_one(10),
+**      lv_two(10).
+**      "lv_three(10),
+**      "lv_four(10).
+**SPLIT p_a at ',' into lv_one lv_two. "lv_three lv_four.
+**write : / lv_one, lv_two. "lv_three, lv_four.
+
+***splitting with Character
+**PARAMETERS: p_a(20).
+**data: lv_o(10),
+**      lv_t(10),
+**      lv_th(10),
+**      lv_f(10).
+**split p_a at 'A' into lv_o lv_t lv_th lv_f.
+**write : / lv_o, lv_t, lv_th, lv_f.
+
+****offsetting
+**PARAMETERS p_a(20).
+**data lv_dst(10).
+**lv_dst = p_a+3(4).
+**write lv_dst.
+
+****Replace
+**PARAMETERS p_a(20).
+**do.
+**  if p_a ca ','.
+**    REPLACE ',' with '@' into p_a.
+**    else.
+**      exit.
+**     endif.
+**    enddo.
+**WRITE p_a.
+
+****length of string
+**PARAMETERS p_a(10).
+**data lv_leng type i.
+**lv_leng = strlen( p_a ).
+**write lv_leng.
